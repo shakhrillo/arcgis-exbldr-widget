@@ -1,0 +1,19 @@
+{
+  "name": "gis-custom-map",
+  "label": "GIS Custom Map",
+  "type": "widget",
+  "version": "1.17.0",
+  "exbVersion": "1.17.0",
+  "author": "Shakhrillo",
+  "description": "This is a GIS Custom Map widget. It allows users to create custom maps with various GIS functionalities. The widget includes features such as map layers, spatial analysis, and data visualization. It is designed to be user-friendly and customizable, making it suitable for a wide range of GIS applications.",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {},
+  "translatedLocales": [
+    "en"
+  ],
+  "defaultSize": {
+    "width": 400,
+    "height": 200
+  }
+}
