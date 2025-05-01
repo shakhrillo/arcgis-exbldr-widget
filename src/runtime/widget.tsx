@@ -29,11 +29,29 @@ import type Point from 'esri/geometry/Point'
 import defaultMessages from './translations/default'
 
 export default function (props: AllWidgetProps<IMConfig>) {
+  // private view: MapView;
+  // private layerList: LayerList;
+  const [mapView, setMapView] = useState<JimuMapView>(null)
+  const [layerList, setLayerList] = useState<any>(null)
+
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
   const [zoom, setZoom] = useState<number>(0)
   const [scale, setScale] = useState<number>(0)
   const [mapViewReady, setMapViewReady] = useState<boolean>(false)
+
+
+  // This function is called when the active view changes.
+  // It is passed the new view as a parameter.
+  // We use this to set the mapView state variable.
+  // We also set the layerList state variable to the layer list of the new view.
+  const activeViewChange = (views: { [viewId: string]: JimuMapView }) => {
+    const jmv = Object.values(views)[0] // Get the first JimuMapView from the views object
+    if (jmv) {
+      setMapView(jmv)
+      setLayerList(jmv.view.allLayerViews)
+    }
+  }
 
   const activeViewChangeHandler = (jmv: JimuMapView) => {
     if (jmv) {
@@ -98,11 +116,43 @@ export default function (props: AllWidgetProps<IMConfig>) {
           <JimuMapViewComponent
             useMapWidgetId={props.useMapWidgetIds?.[0]}
             onActiveViewChange={activeViewChangeHandler}
+
+            onViewsCreate={activeViewChange}
           />
         )}
 
+      {/* Show map name and id */}
+      <p>
+        {props?.label}
+      </p>
       {/* Only show the data once the MapView is ready */}
       <p>{mapViewReady ? allSections : defaultMessages.latLonWillBeHere}</p>
+
+      <hr />
+      <p>
+        Map name: {mapView?.status}
+      </p>
+
+      <hr />
+      {/* Selected map layer */}
+      <p>
+        Selected map layers:
+      </p>
+      <ul>
+        {layerList &&
+          layerList.map((layer: any, index: number) => {
+            return (
+              <li key={index}>
+                {layer.layer.title}
+              </li>
+            )
+          })}
+        {layerList && layerList.length === 0 && (
+          <li>
+            No layers in the map.
+          </li>
+        )}
+      </ul>
     </div>
   )
 }
