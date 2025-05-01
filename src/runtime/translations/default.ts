@@ -1,5 +1,5 @@
 export default {
-    _widgetLabel: '+ Get Map Coordinates (Function)',
+    _widgetLabel: 'Custom Widget Pro',
     latLon: 'Lat/Lon',
     zoom: 'Zoom',
     latLonWillBeHere: 'Lat/Lon (None - please mouse over map)'
