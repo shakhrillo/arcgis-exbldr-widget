@@ -85,6 +85,7 @@ export default function (props: AllWidgetProps<IMConfig>) {
       setMapView(jmv)
       console.log('activeViewChange', jmv)
       setLayerList(jmv.view.allLayerViews)
+      console.log('layerList', jmv.view.allLayerViews)
     }
   }
 
@@ -96,6 +97,7 @@ export default function (props: AllWidgetProps<IMConfig>) {
          <JimuMapViewComponent
            useMapWidgetId={props.useMapWidgetIds?.[0]}
            onViewsCreate={activeViewChange}
+           onViewsChange={activeViewChange}
          />
        )}
       <div className='d-flex flex-row'>
