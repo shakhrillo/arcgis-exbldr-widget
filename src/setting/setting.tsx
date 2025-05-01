@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/react';
+import { React, css, jsx } from 'jimu-core'
 import type { AllWidgetSettingProps } from 'jimu-for-builder'
 import {
   MapWidgetSelector,
