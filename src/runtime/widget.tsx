@@ -1,24 +1,5 @@
 /* eslint-disable no-prototype-builtins */
 /** @jsx jsx */
-/**
-  Licensing
-
-  Copyright 2022 Esri
-
-  Licensed under the Apache License, Version 2.0 (the "License"); You
-  may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-  implied. See the License for the specific language governing
-  permissions and limitations under the License.
-
-  A copy of the license is available in the repository's
-  LICENSE file.
-*/
 import { type AllWidgetProps, jsx } from 'jimu-core'
 import { useState } from 'react'
 import type { IMConfig } from '../config'
@@ -27,6 +8,10 @@ import { type JimuMapView, JimuMapViewComponent } from 'jimu-arcgis'
 import type Point from 'esri/geometry/Point'
 
 import defaultMessages from './translations/default'
+
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import Query from '@arcgis/core/rest/support/Query';
+
 
 export default function (props: AllWidgetProps<IMConfig>) {
   // private view: MapView;
@@ -49,7 +34,36 @@ export default function (props: AllWidgetProps<IMConfig>) {
     const jmv = Object.values(views)[0] // Get the first JimuMapView from the views object
     if (jmv) {
       setMapView(jmv)
+      console.log('activeViewChange', jmv)
       setLayerList(jmv.view.allLayerViews)
+
+      // Find layer title AGIL_190208
+      const layer = jmv.view.allLayerViews.find((layer: any) => {
+        return layer.layer.title === 'AGIL 190208'
+      })
+
+      const url = (layer?.layer as __esri.FeatureLayer)?.url
+
+      const _layer = new FeatureLayer({
+        url
+      });
+
+      const query = _layer.createQuery();
+      query.where = '1=1'; // get all features
+      query.outFields = ['*']; // or specific fields
+      query.returnGeometry = true;
+
+      _layer.queryFeatures(query).then((result) => {
+        const features = result.features;
+        features.forEach(feature => {
+          console.log('feature', feature);
+          const geometry = feature.geometry; // e.g., Point
+          const attributes = feature.attributes;
+
+          console.log("Coordinates:", geometry);
+          console.log("Attributes:", attributes);
+        });
+      });
     }
   }
 
@@ -140,7 +154,8 @@ export default function (props: AllWidgetProps<IMConfig>) {
       </p>
       <ul>
         {layerList &&
-          layerList.map((layer: any, index: number) => {
+          layerList
+          .map((layer: any, index: number) => {
             return (
               <li key={index}>
                 {layer.layer.title}
